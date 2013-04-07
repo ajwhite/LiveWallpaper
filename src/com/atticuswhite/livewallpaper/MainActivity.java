@@ -15,10 +15,11 @@ import android.view.SurfaceHolder;
 
 public class MainActivity extends WallpaperService {
 	private final Handler mHandler = new Handler();
+	private int FPS = 50;
 
 	@Override
 	public Engine onCreateEngine() {
-		return new WallpaperEngine(new FollowerInstance());
+		return new WallpaperEngine(new NeighborInstance());
 	}
     
 	class WallpaperEngine extends Engine{
@@ -59,7 +60,7 @@ public class MainActivity extends WallpaperService {
 		
 		public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height){
 			super.onSurfaceChanged(holder, format, width, height);
-			instance.surfaceChanged(width/2.0f, height/2.0f);
+			instance.surfaceChanged(width/2.0f, height/2.0f, width, height);
 			drawFrame();
 		}
 		
@@ -80,7 +81,7 @@ public class MainActivity extends WallpaperService {
 		
 		public void onTouchEvent(MotionEvent event){
 			super.onTouchEvent(event);
-			instance.onTouch(event.getX(), event.getY());
+			instance.onTouch(event);
 		}
 		
 		private void drawFrame(){
@@ -90,7 +91,9 @@ public class MainActivity extends WallpaperService {
 			try{
 				c = holder.lockCanvas();
 				if (c != null){
+					c.save();
 					instance.drawFrame(c);
+					c.restore();
 				}
 			} finally{
 				if (c != null){
@@ -102,7 +105,7 @@ public class MainActivity extends WallpaperService {
 			// schedule render
 			mHandler.removeCallbacks(mDrawFrame);
 			if (mVisible){
-				mHandler.postDelayed(mDrawFrame, 1000/25);
+				mHandler.postDelayed(mDrawFrame, 1000/FPS);
 			}
 		}
 	}

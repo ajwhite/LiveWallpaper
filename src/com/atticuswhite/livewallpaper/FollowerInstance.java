@@ -64,11 +64,11 @@ public class FollowerInstance extends WallpaperInstance{
 
 
 	@Override
-	public void onTouch(float x, float y) {
+	public void onTouch(MotionEvent event) {
 		if (target == null){
 			target = new Coordinate();
 		}
-		target.setX(x);
-		target.setY(y);
+		target.setX(event.getX());
+		target.setY(event.getY());
 	}
 }
