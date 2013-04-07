@@ -1,5 +1,7 @@
 package com.atticuswhite.livewallpaper;
 
+import java.util.ArrayList;
+
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
@@ -9,14 +11,23 @@ import android.view.MotionEvent;
 
 public class NeighborInstance extends WallpaperInstance {
 	private final Paint mPaint = new Paint();
-	private int totalNodes = 30;
-	private float min_dist = 100;
-	private float min_speed = 10;
-	private float node_speed = 7;
-	private float circle_radius = 100;
-	private boolean gather = false;
 	private Coordinate clickCoord;
 	private Node[] nodes;
+	
+	// settings
+	private int totalNodes = 50;
+	private float min_dist = 75;
+	private float min_speed = 10;
+	private float node_speed = 7;
+	private float circle_radius = 150;
+
+	// states
+	private boolean gather = false;
+	
+	// options
+	private boolean webNodes = true;
+	private boolean followMouse = true;
+	
 	
 	NeighborInstance(){
 		super();
@@ -32,10 +43,11 @@ public class NeighborInstance extends WallpaperInstance {
 		nodes = new Node[totalNodes];
 		for (int i=0; i<totalNodes; i++){
 			nodes[i] = new Node((float)(Math.random() * mWidth), 
-							(float)Math.random() * mHeight, 
+							(float) Math.random() * mHeight, 
 							(float) Math.random() * mWidth, 
 							(float) Math.random() * mHeight,
-							(float) (min_speed + Math.random() * node_speed));
+							(float) (min_speed + Math.random() * node_speed),
+							(int) Math.floor((1 + Math.random() * 3))) ;
 		}
 	}
 
@@ -43,7 +55,7 @@ public class NeighborInstance extends WallpaperInstance {
 	public void drawFrame(Canvas c) {
 		c.drawColor(0xff000000);
 		updateNodes(c);
-		if (!gather){
+		if (!gather && webNodes){
 			webNodes(c);
 		}
 	}
@@ -85,7 +97,7 @@ public class NeighborInstance extends WallpaperInstance {
 			node.getCPoint().setY(cY);
 			
 
-			c.drawCircle(node.getCPoint().getX(), node.getCPoint().getY(), 2, mPaint);
+			c.drawCircle(node.getCPoint().getX(), node.getCPoint().getY(), node.getSize(), mPaint);
 			
 			if ((node.getCPoint().getX() >= node.getDPoint().getX()-1) &&
 				(node.getCPoint().getX() <= node.getDPoint().getX()+1) &&
@@ -98,18 +110,16 @@ public class NeighborInstance extends WallpaperInstance {
 					positionRadialNode(node);
 				}
 			}
-			if (!gather){
-				//webNodes(c);
-			}
 		}
 	}
 	
 	private void positionRadialNode(Node node){
 		float radian = (float) (((Math.random() * 360) / 180) * Math.PI);
-		//node.getDPoint().setX((float) ((mWidth / 2) + Math.cos(radian) * circle_radius));
-		//node.getDPoint().setY((float) ((mHeight / 2) + Math.sin(radian) * circle_radius));
-		node.getDPoint().setX(clickCoord.getX() + (float) (Math.cos(radian) * circle_radius));
-		node.getDPoint().setY(clickCoord.getY() + (float) (Math.sin(radian) * circle_radius));
+		float dX = followMouse ? clickCoord.getX() : mWidth/2;
+		float dY = followMouse ? clickCoord.getY() : mHeight/2;
+		
+		node.getDPoint().setX(dX + (float) (Math.cos(radian) * circle_radius));
+		node.getDPoint().setY(dY + (float) (Math.sin(radian) * circle_radius));
 	}
 	
 	private void positionLinearNode(Node node){
@@ -143,11 +153,15 @@ public class NeighborInstance extends WallpaperInstance {
 		private Coordinate cPoint;
 		private float speed = 1;
 		private boolean gather = true;
+		private int size = 1;
+		private ArrayList<Node> children;
+		private Node parent;
 		
-		Node(float x, float y, float cX, float cY, float speed){
+		Node(float x, float y, float cX, float cY, float speed, int size){
 			point = new Coordinate(x, y);
 			cPoint = new Coordinate(cX, cY);
-			this.speed = 15.0f; //speed;
+			this.speed = speed; // + (size * 2); //15.0f; //speed;
+			this.size = 1;
 		}
 		
 		public Coordinate getDPoint(){
@@ -165,6 +179,11 @@ public class NeighborInstance extends WallpaperInstance {
 		public boolean isGather(){
 			return gather;
 		}
+		
+		public int getSize(){
+			return size;
+		}
 	}
+	
 
 }

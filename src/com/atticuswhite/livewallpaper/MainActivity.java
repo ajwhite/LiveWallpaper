@@ -15,7 +15,7 @@ import android.view.SurfaceHolder;
 
 public class MainActivity extends WallpaperService {
 	private final Handler mHandler = new Handler();
-	private int FPS = 50;
+	private int FPS = 35;
 
 	@Override
 	public Engine onCreateEngine() {
