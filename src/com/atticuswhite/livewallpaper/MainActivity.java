@@ -19,7 +19,8 @@ public class MainActivity extends WallpaperService {
 
 	@Override
 	public Engine onCreateEngine() {
-		return new WallpaperEngine(new NeighborInstance());
+		return new WallpaperEngine(new CloudInstance(getBaseContext()));
+		//return new WallpaperEngine(new TailInstance());
 	}
     
 	class WallpaperEngine extends Engine{
@@ -75,7 +76,8 @@ public class MainActivity extends WallpaperService {
 		}
 		
 		public void onOffsetsChanged(float xOffset, float yOffset, float xStep, float yStep, int xPixels, int yPixels) {
-			instance.offsetChanged(xOffset);
+			Log.i("Live wallpaper", "xOffset: " + xOffset + ", xStep: " + xStep + ", xPixels: " + xPixels);
+			instance.offsetChanged(xOffset, yOffset, xStep, yStep, xPixels, yPixels);
 			drawFrame();
 		}
 		

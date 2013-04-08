@@ -8,12 +8,13 @@ public abstract class WallpaperInstance implements WallpaperInterface {
 	private Coordinate center;
 	protected float mWidth = 500;
 	protected float mHeight = 700;
-	private float mOffset;
+	protected ScreenOffset mOffset;
 	protected long mStartTime;
 	
 	WallpaperInstance(){
 		center = new Coordinate();
 		mStartTime = SystemClock.elapsedRealtime();
+		mOffset = new ScreenOffset();
 	}
 	
 	@Override
@@ -29,20 +30,32 @@ public abstract class WallpaperInstance implements WallpaperInterface {
 	}
 
 	@Override
-	public void offsetChanged(float offset) {
-		mOffset = offset;
-		
+	public void offsetChanged(float xOffset, float yOffset, float xStep, float yStep, float xPixels, float yPixels) {
+		mOffset.xOffset = xOffset;
+		mOffset.yOffset = yOffset;
+		mOffset.xStep = xStep;
+		mOffset.yStep = yStep;
+		mOffset.xPixels = xPixels;
+		mOffset.yPixels = yPixels;
 	}
 	
 	protected Coordinate getCenter(){
 		return center;
 	}
 	
-	protected float getOffset(){
+	protected ScreenOffset getOffset(){
 		return mOffset;
 	}
 	
 	
+	class ScreenOffset {
+		public float xOffset;
+		public float yOffset;
+		public float xStep;
+		public float yStep;
+		public float xPixels;
+		public float yPixels;
+	}
 	
 	
 }

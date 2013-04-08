@@ -15,7 +15,7 @@ public class NeighborInstance extends WallpaperInstance {
 	private Node[] nodes;
 	
 	// settings
-	private int totalNodes = 50;
+	private int totalNodes = 300;
 	private float min_dist = 75;
 	private float min_speed = 10;
 	private float node_speed = 7;
@@ -25,7 +25,7 @@ public class NeighborInstance extends WallpaperInstance {
 	private boolean gather = false;
 	
 	// options
-	private boolean webNodes = true;
+	private boolean webNodes = false;
 	private boolean followMouse = true;
 	
 	
@@ -88,16 +88,10 @@ public class NeighborInstance extends WallpaperInstance {
 	
 	private void updateNodes(Canvas c){
 		for (Node node : nodes){
-			Coordinate cPoint = node.getCPoint();
-			Coordinate dPpoint = node.getDPoint();
-			float cX = node.getCPoint().getX() + (dPpoint.getX() - cPoint.getX()) / node.getSpeed();
-			float cY = node.getCPoint().getY() + (dPpoint.getY() - cPoint.getY()) / node.getSpeed();
-			//Log.i("New Point", "CX: " + cX + ", CY: " + cY);
-			node.getCPoint().setX(cX);
-			node.getCPoint().setY(cY);
 			
-
+			node.step();
 			c.drawCircle(node.getCPoint().getX(), node.getCPoint().getY(), node.getSize(), mPaint);
+			
 			
 			if ((node.getCPoint().getX() >= node.getDPoint().getX()-1) &&
 				(node.getCPoint().getX() <= node.getDPoint().getX()+1) &&
@@ -148,42 +142,4 @@ public class NeighborInstance extends WallpaperInstance {
 	}
 
 	
-	class Node {
-		private Coordinate point;
-		private Coordinate cPoint;
-		private float speed = 1;
-		private boolean gather = true;
-		private int size = 1;
-		private ArrayList<Node> children;
-		private Node parent;
-		
-		Node(float x, float y, float cX, float cY, float speed, int size){
-			point = new Coordinate(x, y);
-			cPoint = new Coordinate(cX, cY);
-			this.speed = speed; // + (size * 2); //15.0f; //speed;
-			this.size = 1;
-		}
-		
-		public Coordinate getDPoint(){
-			return point;
-		}
-		
-		public Coordinate getCPoint(){
-			return cPoint;
-		}
-		
-		public float getSpeed(){
-			return speed;
-		}
-		
-		public boolean isGather(){
-			return gather;
-		}
-		
-		public int getSize(){
-			return size;
-		}
-	}
-	
-
 }
