@@ -48,7 +48,6 @@ public class CloudInstance extends WallpaperInstance {
 		paint.setStyle(Paint.Style.STROKE);
 		background = BitmapFactory.decodeResource(context.getResources(), R.drawable.castlemountain);
 		
-		
 		for (int i=0; i<8; i++){
 			Sprite cloud = new CloudSprite(
 					(float) (canvasWidth() + (i * 50)),
