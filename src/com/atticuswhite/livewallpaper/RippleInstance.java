@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 
+
+// inspiration: http://jsfiddle.net/esteewhy/5Ht3b/6/
 public class RippleInstance extends WallpaperInstance {
 
 	private Context ctx;
